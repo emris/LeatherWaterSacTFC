@@ -1,0 +1,12 @@
+[
+{
+  "modid": "LeatherWaterSac",
+  "name": "Leather Water Sac",
+  "version": "146.486.1.0.b75",
+  "updateUrl": "",
+  "authors": [
+    "Emris_Morath"
+  ],
+  "description": "This adds a new Item to TFC. It's made with a shapeless recipe using one Leather, String and any TFC knife"
+}
+]
