@@ -11,6 +11,7 @@ import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import TFC.Core.Player.TFC_PlayerServer;
+import TFC.Food.FoodStatsTFC;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -95,10 +96,18 @@ public class ItemLeatherWaterSac extends Item {
 	public ItemStack onFoodEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		if(!par2World.isRemote) {
 			if(par1ItemStack.getItemDamage() != par1ItemStack.getMaxDamage()) {
-				par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() + 1);
 				if(par3EntityPlayer instanceof EntityPlayerMP) {
 					EntityPlayerMP p = (EntityPlayerMP)par3EntityPlayer;
-					TFC_PlayerServer.getFromEntityPlayer(par3EntityPlayer).getFoodStatsTFC().restoreWater(p, 2400);
+					FoodStatsTFC fs = TFC_PlayerServer.getFromEntityPlayer(par3EntityPlayer).getFoodStatsTFC();
+					if (fs.getMaxWater(p) > fs.waterLevel) {
+						float nwl = fs.getMaxWater(p);
+						int rw = (int)nwl / 6;
+						fs.restoreWater(p, rw);
+						par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() + 1);
+					} else {
+						par2World.playSoundAtEntity(par3EntityPlayer, "random.burp", 0.5F, par2World.rand.nextFloat() * 0.1F + 0.9F);
+						par3EntityPlayer.sendChatToPlayer("I'm full!");
+					}
 				}
 			}
 		}
