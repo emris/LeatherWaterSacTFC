@@ -38,6 +38,10 @@ public class ItemLeatherWaterSac extends Item {
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World,	EntityPlayer par3EntityPlayer) {
+		if (par3EntityPlayer.capabilities.isCreativeMode) {
+			par1ItemStack.setItemDamage(0);
+		}
+		
 		MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(par2World, par3EntityPlayer, true);
 		if (mop == null) {
 			if(par1ItemStack.getItemDamage() == par1ItemStack.getMaxDamage()){
@@ -45,7 +49,6 @@ public class ItemLeatherWaterSac extends Item {
 			} else {
 				par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
 			}
-
 			return par1ItemStack;
 		} else {
 			if(mop.typeOfHit == EnumMovingObjectType.TILE) {
@@ -63,7 +66,9 @@ public class ItemLeatherWaterSac extends Item {
 				
 				if(par2World.getBlockMaterial(x, y, z) == Material.water) {
 					if(par1ItemStack.getItemDamage() > 0) {
-						par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() - 1);
+						if (!par3EntityPlayer.capabilities.isCreativeMode) {
+							par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() - 1);
+						}
 					} else {
 						par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
 					}
@@ -95,7 +100,7 @@ public class ItemLeatherWaterSac extends Item {
 	@Override
 	public ItemStack onFoodEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		if(!par2World.isRemote) {
-			if(par1ItemStack.getItemDamage() != par1ItemStack.getMaxDamage()) {
+			if(par1ItemStack.getItemDamage() != par1ItemStack.getMaxDamage() || par3EntityPlayer.capabilities.isCreativeMode) {
 				if(par3EntityPlayer instanceof EntityPlayerMP) {
 					EntityPlayerMP p = (EntityPlayerMP)par3EntityPlayer;
 					FoodStatsTFC fs = TFC_PlayerServer.getFromEntityPlayer(par3EntityPlayer).getFoodStatsTFC();
@@ -103,7 +108,9 @@ public class ItemLeatherWaterSac extends Item {
 						float nwl = fs.getMaxWater(p);
 						int rw = (int)nwl / 6;
 						fs.restoreWater(p, rw);
-						par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() + 1);
+						if (!par3EntityPlayer.capabilities.isCreativeMode) {
+							par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() + 1);
+						}
 					} else {
 						par2World.playSoundAtEntity(par3EntityPlayer, "random.burp", 0.5F, par2World.rand.nextFloat() * 0.1F + 0.9F);
 						par3EntityPlayer.sendChatToPlayer("I'm full!");
@@ -118,7 +125,5 @@ public class ItemLeatherWaterSac extends Item {
     public boolean requiresMultipleRenderPasses() {
         return true;
     }
-	
-	
 	
 }

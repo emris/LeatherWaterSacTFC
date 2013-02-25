@@ -13,6 +13,10 @@ public class CraftingHandler implements ICraftingHandler {
 	public void onCrafting(EntityPlayer player, ItemStack item,	IInventory craftMatrix) {
 		if(craftMatrix != null) {
 			if(item.itemID == ItemLeatherWaterSac.itemID) {
+				if (player.capabilities.isCreativeMode) {
+					item.setItemDamage(0);
+				}
+				
 				Item[] tfcKnives = Recipes.Knives;
 				for(int i = 0; i < craftMatrix.getSizeInventory(); i++) {
 					if(craftMatrix.getStackInSlot(i) == null) {
@@ -25,9 +29,7 @@ public class CraftingHandler implements ICraftingHandler {
 								tfcKnife.damageItem(1, player);
 								if(tfcKnife.getItemDamage() != 0 || player.capabilities.isCreativeMode) {
 									craftMatrix.setInventorySlotContents(i, tfcKnife);
-									craftMatrix.getStackInSlot(i).stackSize = craftMatrix.getStackInSlot(i).stackSize + 1;
-									if(craftMatrix.getStackInSlot(i).stackSize > 2)
-										craftMatrix.getStackInSlot(i).stackSize = 2;
+									craftMatrix.getStackInSlot(i).stackSize = 2;
 								}
 							}
 						}
@@ -43,6 +45,5 @@ public class CraftingHandler implements ICraftingHandler {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 }
