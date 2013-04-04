@@ -23,7 +23,7 @@ public class CraftingHandler implements ICraftingHandler {
 						continue;
 					}
 					for(int j = 0; j < tfcKnives.length; j++) {
-						if(craftMatrix.getStackInSlot(i).itemID == tfcKnives[j].shiftedIndex) {
+						if(craftMatrix.getStackInSlot(i).itemID == tfcKnives[j].itemID) {
 							ItemStack tfcKnife = craftMatrix.getStackInSlot(i).copy();
 							if(tfcKnife != null) {
 								tfcKnife.damageItem(1, player);
@@ -43,7 +43,6 @@ public class CraftingHandler implements ICraftingHandler {
 	@Override
 	public void onSmelting(EntityPlayer player, ItemStack item) {
 		// TODO Auto-generated method stub
-		
 	}
 
 }

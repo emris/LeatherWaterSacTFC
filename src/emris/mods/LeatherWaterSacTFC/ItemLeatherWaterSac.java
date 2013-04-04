@@ -1,6 +1,7 @@
 package emris.mods.LeatherWaterSacTFC;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -12,29 +13,31 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import TFC.Core.Player.TFC_PlayerServer;
 import TFC.Food.FoodStatsTFC;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemLeatherWaterSac extends Item {
 
 	public static int itemID;
-
+	
 	public ItemLeatherWaterSac(int par1) {
 		super(par1);
 		
 		maxStackSize = 1;
 		setCreativeTab(CreativeTabs.tabMisc);
-		setIconIndex(0);
-		setItemName("itemLeatherWaterSac");
 		setMaxDamage(12);
 		hasSubtypes = false;
-		itemID = this.shiftedIndex;
+		LanguageRegistry.addName(this, "Leather Water Sac");
+		itemID = 256 + par1;
 	}
 	
+	@SideOnly(Side.CLIENT)
 	@Override
-	public String getTextureFile() {
-		return CommonProxy.ITEMS_PNG;
-	}
+    public void updateIcons(IconRegister registerer)
+    {
+		iconIndex = registerer.registerIcon("LeatherWaterSacTFC:LeatherWaterSac");
+    }
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World,	EntityPlayer par3EntityPlayer) {
@@ -92,13 +95,9 @@ public class ItemLeatherWaterSac extends Item {
 	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
         return 32;
     }
-    
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-        return false;
-    }
-    
+
 	@Override
-	public ItemStack onFoodEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
+	public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		if(!par2World.isRemote) {
 			if(par1ItemStack.getItemDamage() != par1ItemStack.getMaxDamage() || par3EntityPlayer.capabilities.isCreativeMode) {
 				if(par3EntityPlayer instanceof EntityPlayerMP) {
