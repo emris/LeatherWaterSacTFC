@@ -13,8 +13,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="LeatherWaterSac", name="Leather Water Sac", version="1.3.b76", dependencies = "after:TerraFirmaCraft")
-@NetworkMod(clientSideRequired = true, serverSideRequired = true, versionBounds = "[1.3.b76]")
+@Mod(modid="LeatherWaterSac", name="Leather Water Sac", version="1.4.b76", dependencies = "after:TerraFirmaCraft")
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, versionBounds = "[1.4.b76]")
 public class LeatherWaterSac {
 	@Instance("LeatherWaterSac")
 	public static LeatherWaterSac instance;
@@ -27,7 +27,7 @@ public class LeatherWaterSac {
 	@Init
 	public void load(FMLInitializationEvent event) {
 		ItemStack lwSac = new ItemStack(this.itemLeatherWaterSac, 1, this.itemLeatherWaterSac.getMaxDamage());
-		ItemStack leather = new ItemStack(TFCItems.PrepHide, 1);
+		ItemStack leather = new ItemStack(TFCItems.TerraLeather, 1);
 		ItemStack string = new ItemStack(Item.silk, 1);
 		
 		Item[] tfcKnives = Recipes.Knives;
