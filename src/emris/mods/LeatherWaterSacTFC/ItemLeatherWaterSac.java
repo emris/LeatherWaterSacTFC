@@ -120,7 +120,7 @@ public class ItemLeatherWaterSac extends Item {
 				if(par3EntityPlayer instanceof EntityPlayerMP) {
 					EntityPlayerMP p = (EntityPlayerMP)par3EntityPlayer;
 					FoodStatsTFC fs = TFC_PlayerServer.getFromEntityPlayer(par3EntityPlayer).getFoodStatsTFC();
-					if (fs.getMaxWater(p) > fs.waterLevel) {
+					if (fs.getMaxWater(p) - 100 > fs.waterLevel) {
 						float nwl = fs.getMaxWater(p);
 						int rw = (int)nwl / 6;
 						fs.restoreWater(p, rw);
