@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package emris.mods.LeatherWaterSacTFC;
+package emris.LeatherWaterSacTFC;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -25,10 +25,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import TFC.Core.Player.TFC_PlayerServer;
+import TFC.Core.TFC_Core;
 import TFC.Food.FoodStatsTFC;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -51,10 +52,9 @@ public class ItemLeatherWaterSac extends Item {
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-    public void updateIcons(IconRegister registerer)
-    {
-		iconIndex = registerer.registerIcon("LeatherWaterSacTFC:LeatherWaterSac");
-    }
+	public void registerIcons(IconRegister registerer) {
+		this.itemIcon = registerer.registerIcon("leatherwatersac:LeatherWaterSac");
+	}
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World,	EntityPlayer par3EntityPlayer) {
@@ -65,7 +65,7 @@ public class ItemLeatherWaterSac extends Item {
 		MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(par2World, par3EntityPlayer, true);
 		if (mop == null) {
 			if(par1ItemStack.getItemDamage() == par1ItemStack.getMaxDamage()){
-				if(par3EntityPlayer instanceof EntityPlayerMP) { par3EntityPlayer.sendChatToPlayer("Empty!"); }
+				if(par3EntityPlayer instanceof EntityPlayerMP) { par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Empty!")); }
 			} else {
 				par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
 			}
@@ -94,7 +94,7 @@ public class ItemLeatherWaterSac extends Item {
 					}
 				} else {
 					if(par1ItemStack.getItemDamage() == par1ItemStack.getMaxDamage()){
-						if(par3EntityPlayer instanceof EntityPlayerMP) { par3EntityPlayer.sendChatToPlayer("Empty!"); }
+						if(par3EntityPlayer instanceof EntityPlayerMP) { par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Empty!")); }
 					} else {
 						par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
 					}
@@ -110,8 +110,8 @@ public class ItemLeatherWaterSac extends Item {
 	}
 
 	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
-        return 32;
-    }
+		return 32;
+	}
 
 	@Override
 	public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
@@ -119,8 +119,8 @@ public class ItemLeatherWaterSac extends Item {
 			if(par1ItemStack.getItemDamage() != par1ItemStack.getMaxDamage() || par3EntityPlayer.capabilities.isCreativeMode) {
 				if(par3EntityPlayer instanceof EntityPlayerMP) {
 					EntityPlayerMP p = (EntityPlayerMP)par3EntityPlayer;
-					FoodStatsTFC fs = TFC_PlayerServer.getFromEntityPlayer(par3EntityPlayer).getFoodStatsTFC();
-					if (fs.getMaxWater(p) - 100 > fs.waterLevel) {
+					FoodStatsTFC fs = TFC_Core.getPlayerFoodStats(par3EntityPlayer);
+					if (fs.getMaxWater(p) - 500 > fs.waterLevel) {
 						float nwl = fs.getMaxWater(p);
 						int rw = (int)nwl / 6;
 						fs.restoreWater(p, rw);
@@ -129,17 +129,11 @@ public class ItemLeatherWaterSac extends Item {
 						}
 					} else {
 						par2World.playSoundAtEntity(par3EntityPlayer, "random.burp", 0.5F, par2World.rand.nextFloat() * 0.1F + 0.9F);
-						par3EntityPlayer.sendChatToPlayer("I'm full!");
+						par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("I'm full!"));
 					}
 				}
 			}
 		}
 		return par1ItemStack;
 	}
-
-	@SideOnly(Side.CLIENT)
-    public boolean requiresMultipleRenderPasses() {
-        return true;
-    }
-	
 }
