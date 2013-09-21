@@ -1,4 +1,4 @@
-/*
+/**
  *  Copyright (C) 2013  emris
  *  https://github.com/emris/LeatherWaterSacTFC
  *
@@ -38,10 +38,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemLeatherWaterSac extends Item {
 
 	public static int itemID;
-	
+
 	public ItemLeatherWaterSac(int par1) {
 		super(par1);
-		
+
 		maxStackSize = 1;
 		setCreativeTab(CreativeTabs.tabMisc);
 		setMaxDamage(12);
@@ -49,7 +49,7 @@ public class ItemLeatherWaterSac extends Item {
 		LanguageRegistry.addName(this, "Leather Water Sac");
 		itemID = 256 + par1;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IconRegister registerer) {
@@ -57,83 +57,87 @@ public class ItemLeatherWaterSac extends Item {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World,	EntityPlayer par3EntityPlayer) {
-		if (par3EntityPlayer.capabilities.isCreativeMode) {
-			par1ItemStack.setItemDamage(0);
+	public ItemStack onItemRightClick(ItemStack sac, World world, EntityPlayer player) {
+		if (player.capabilities.isCreativeMode) {
+			sac.setItemDamage(0);
 		}
-		
-		MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(par2World, par3EntityPlayer, true);
+
+		MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(world, player, true);
 		if (mop == null) {
-			if(par1ItemStack.getItemDamage() == par1ItemStack.getMaxDamage()){
-				if(par3EntityPlayer instanceof EntityPlayerMP) { par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Empty!")); }
+			if(sac.getItemDamage() == sac.getMaxDamage()){
+				if(player instanceof EntityPlayerMP) { player.sendChatToPlayer(ChatMessageComponent.createFromText("Empty!")); }
 			} else {
-				par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
+				player.setItemInUse(sac, this.getMaxItemUseDuration(sac));
 			}
-			return par1ItemStack;
+			return sac;
 		} else {
 			if(mop.typeOfHit == EnumMovingObjectType.TILE) {
 				int x = mop.blockX;
 				int y = mop.blockY;
 				int z = mop.blockZ;
-				
-				if(!par2World.canMineBlock(par3EntityPlayer, x,  y,  z)) {
-					return par1ItemStack;
+
+				if(!world.canMineBlock(player, x,  y,  z)) {
+					return sac;
 				}
-				
-				if(!par3EntityPlayer.canPlayerEdit(x, y, z, mop.sideHit, par1ItemStack)) {
-					return par1ItemStack;
+
+				if(!player.canPlayerEdit(x, y, z, mop.sideHit, sac)) {
+					return sac;
 				}
-				
-				if(par2World.getBlockMaterial(x, y, z) == Material.water) {
-					if(par1ItemStack.getItemDamage() > 0) {
-						if (!par3EntityPlayer.capabilities.isCreativeMode) {
-							par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() - 1);
+
+				if(world.getBlockMaterial(x, y, z) == Material.water) {
+					if(sac.getItemDamage() > 0) {
+						if (!player.capabilities.isCreativeMode) {
+							sac.setItemDamage(sac.getItemDamage() - 6);
+							world.spawnParticle("splash", x, y+2, z, 0.0D, 0.0D, 0.0D);
+							world.playSoundAtEntity(player, "random.splash", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 						}
 					} else {
-						par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
+						player.setItemInUse(sac, this.getMaxItemUseDuration(sac));
 					}
 				} else {
-					if(par1ItemStack.getItemDamage() == par1ItemStack.getMaxDamage()){
-						if(par3EntityPlayer instanceof EntityPlayerMP) { par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("Empty!")); }
+					if(sac.getItemDamage() == sac.getMaxDamage()){
+						if(player instanceof EntityPlayerMP) { player.sendChatToPlayer(ChatMessageComponent.createFromText("Empty!")); }
 					} else {
-						par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
+						player.setItemInUse(sac, this.getMaxItemUseDuration(sac));
 					}
 				}
 			}
-			return par1ItemStack;
+			return sac;
 		}
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack sac) {
 		return EnumAction.drink;
 	}
 
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	public int getMaxItemUseDuration(ItemStack sac) {
 		return 32;
 	}
 
 	@Override
-	public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if(!par2World.isRemote) {
-			if(par1ItemStack.getItemDamage() != par1ItemStack.getMaxDamage() || par3EntityPlayer.capabilities.isCreativeMode) {
-				if(par3EntityPlayer instanceof EntityPlayerMP) {
-					EntityPlayerMP p = (EntityPlayerMP)par3EntityPlayer;
-					FoodStatsTFC fs = TFC_Core.getPlayerFoodStats(par3EntityPlayer);
+	public ItemStack onEaten(ItemStack sac, World world, EntityPlayer player) {
+		if(!world.isRemote) {
+			if(sac.getItemDamage() != sac.getMaxDamage() || player.capabilities.isCreativeMode) {
+				if(player instanceof EntityPlayerMP) {
+					EntityPlayerMP p = (EntityPlayerMP)player;
+					FoodStatsTFC fs = TFC_Core.getPlayerFoodStats(player);
 					if (fs.getMaxWater(p) - 500 > fs.waterLevel) {
 						float nwl = fs.getMaxWater(p);
 						int rw = (int)nwl / 6;
 						fs.restoreWater(p, rw);
-						if (!par3EntityPlayer.capabilities.isCreativeMode) {
-							par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() + 1);
+						if (!player.capabilities.isCreativeMode) {
+							sac.setItemDamage(sac.getItemDamage() + 1);
 						}
 					} else {
-						par2World.playSoundAtEntity(par3EntityPlayer, "random.burp", 0.5F, par2World.rand.nextFloat() * 0.1F + 0.9F);
-						par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("I'm full!"));
+						world.playSoundAtEntity(player, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+						player.sendChatToPlayer(ChatMessageComponent.createFromText("I'm full!"));
+						// For testing
+						//fs.restoreWater(p, -(fs.getMaxWater(p)-500));
 					}
 				}
 			}
 		}
-		return par1ItemStack;
+		return sac;
 	}
 }

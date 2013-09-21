@@ -1,12 +1,12 @@
 [
 {
-  "modid": "LeatherWaterSac",
+  "modid": "leatherwatersac",
   "name": "Leather Water Sac",
-  "version": "1.4.b76",
+  "version": "",
   "updateUrl": "",
   "authors": [
     "Emris_Morath"
   ],
-  "description": "This adds a new Item to TFC. It's made with a shapeless recipe using one Leather, String and any TFC knife"
+  "description": "It's a water sac made out of lather for TerraFirmaCraft"
 }
 ]

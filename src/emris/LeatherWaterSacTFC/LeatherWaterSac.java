@@ -1,4 +1,4 @@
-/*
+/**
  *  Copyright (C) 2013  emris
  *  https://github.com/emris/LeatherWaterSacTFC
  *
@@ -17,10 +17,7 @@
  */
 package emris.LeatherWaterSacTFC;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import TFC.TFCItems;
-import TFC.Core.Recipes;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -29,30 +26,21 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="leatherwatersac", name="Leather Water Sac", version="1.5.b77", dependencies = "after:TerraFirmaCraft")
-@NetworkMod(clientSideRequired = true, serverSideRequired = true, versionBounds = "[1.5.b77]")
+@Mod(modid="leatherwatersac", name="Leather Water Sac", version="2.0.b77", dependencies = "after:TerraFirmaCraft")
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, versionBounds = "[2.0.b77]")
 public class LeatherWaterSac {
 	@Instance("LeatherWaterSac")
 	public static LeatherWaterSac instance;
-	
-	public final static Item itemLeatherWaterSac = new ItemLeatherWaterSac(5252);
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {	}
-	
+	public void preInit(FMLPreInitializationEvent event) {
+		LWSItems.Setup();
+	}
+
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
-		ItemStack lwSac = new ItemStack(this.itemLeatherWaterSac, 1, this.itemLeatherWaterSac.getMaxDamage());
-		ItemStack leather = new ItemStack(TFCItems.TerraLeather, 1);
-		ItemStack string = new ItemStack(Item.silk, 1);
-		ItemStack string_tfc = new ItemStack(TFCItems.WoolYarn, 1);
-		
-		Item[] tfcKnives = Recipes.Knives;
-		for(int j = 0; j < tfcKnives.length; j++) {
-			GameRegistry.addShapelessRecipe(lwSac, leather, string, new ItemStack(tfcKnives[j], 1, 32767));
-			GameRegistry.addShapelessRecipe(lwSac, leather, string_tfc, new ItemStack(tfcKnives[j], 1, 32767));
-		}
-		
+		LWSRecipes.registerRecipes();
 		GameRegistry.registerCraftingHandler(new CraftingHandler());
+		MinecraftForge.EVENT_BUS.register(new TFCAnimalDropEvent());
 	}
 }
