@@ -31,6 +31,7 @@ public class ItemWaterSacLeather extends Item
 		maxStackSize = 12;
 		setCreativeTab(CreativeTabs.tabMisc);
 		hasSubtypes = false;
+		setUnlocalizedName("WaterSacLeather");
 		LanguageRegistry.addName(this, "Water Sac Leather");
 	}
 

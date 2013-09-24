@@ -31,6 +31,7 @@ public class ItemSheepBladder extends Item
 		maxStackSize = 32;
 		setCreativeTab(CreativeTabs.tabMisc);
 		hasSubtypes = false;
+		setUnlocalizedName("SheepBladder");
 		LanguageRegistry.addName(this, "Sheep Bladder");
 	}
 

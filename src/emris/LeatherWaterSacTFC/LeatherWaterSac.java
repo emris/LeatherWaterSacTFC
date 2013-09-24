@@ -26,8 +26,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="leatherwatersac", name="Leather Water Sac", version="2.0.b77", dependencies = "after:TerraFirmaCraft")
-@NetworkMod(clientSideRequired = true, serverSideRequired = true, versionBounds = "[2.0.b77]")
+@Mod(modid="leatherwatersac", name="Leather Water Sac", version="2.1.b77", dependencies = "after:TerraFirmaCraft")
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, versionBounds = "[2.1.b77]")
 public class LeatherWaterSac {
 	@Instance("LeatherWaterSac")
 	public static LeatherWaterSac instance;

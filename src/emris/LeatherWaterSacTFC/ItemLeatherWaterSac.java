@@ -46,6 +46,7 @@ public class ItemLeatherWaterSac extends Item {
 		setCreativeTab(CreativeTabs.tabMisc);
 		setMaxDamage(12);
 		hasSubtypes = false;
+		setUnlocalizedName("LeatherWaterSac");
 		LanguageRegistry.addName(this, "Leather Water Sac");
 		itemID = 256 + par1;
 	}
