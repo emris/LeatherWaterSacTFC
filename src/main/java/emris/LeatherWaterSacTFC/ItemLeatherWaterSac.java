@@ -207,7 +207,7 @@ public class ItemLeatherWaterSac extends Item implements ISize
 						fs.restoreWater(p, -rw);
 						if (!p.capabilities.isCreativeMode)
 							sac.setItemDamage(sac.getItemDamage() + 1);
-						p.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("dring.salt"));
+						p.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("drink.salt"));
 						p.getServerForPlayer().getEntityTracker().sendPacketToAllAssociatedPlayers(p, new Packet18Animation(p, 6));
 					}
 				}

@@ -2,6 +2,6 @@ item.LeatherWaterSac.name=Leather Water Sac
 item.WaterSacLeather.name=Water Sac Leather
 item.SheepBladder.name=Sheep Bladder
 
-dring.full=I'm full!
-dring.salt=Ugh, so salty. Barf!
+drink.full=I'm full!
+drink.salt=Ugh, so salty. Barf!
 sac.empty=Empty!
