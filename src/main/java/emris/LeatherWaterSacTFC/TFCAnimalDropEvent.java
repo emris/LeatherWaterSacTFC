@@ -17,27 +17,25 @@
  */
 package emris.LeatherWaterSacTFC;
 
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import TFC.Entities.Mobs.EntitySheepTFC;
 
-public class ItemSheepBladder extends Item
+public class TFCAnimalDropEvent
 {
-	public ItemSheepBladder(int par1) {
-		super(par1);
-		maxStackSize = 32;
-		setCreativeTab(CreativeTabs.tabMisc);
-		hasSubtypes = false;
-		setUnlocalizedName("SheepBladder");
-		LanguageRegistry.addName(this, "Sheep Bladder");
+	@ForgeSubscribe
+	public void onTFCAnimalDrop(LivingDropsEvent e)
+	{
+		if(e.entityLiving instanceof EntitySheepTFC)
+			addDrops(e, new ItemStack(LWSItems.itemSheepBladder, 1));
 	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IconRegister registerer) {
-		this.itemIcon = registerer.registerIcon("leatherwatersac:SheepBladder");
+	
+	void addDrops (LivingDropsEvent event, ItemStack dropStack)
+	{
+		EntityItem entityitem = new EntityItem(event.entityLiving.worldObj, event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, dropStack);
+		entityitem.delayBeforeCanPickup = 10;
+		event.drops.add(entityitem);
 	}
 }

@@ -24,15 +24,15 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import TFC.TerraFirmaCraft;
 
-public class LWSItems {
+public class LWSItems
+{
 	static int itemLeatherWaterSacID;
 	static int itemWaterSacLeatherID;
 	static int itemSheepBladderID;
-	
 	static Item itemLeatherWaterSac;
 	static Item itemWaterSacLeather;
 	static Item itemSheepBladder;
-	
+
 	public static void Setup()
 	{
 		loadIDs();
@@ -40,13 +40,17 @@ public class LWSItems {
 		itemWaterSacLeather = new ItemWaterSacLeather(itemWaterSacLeatherID);
 		itemSheepBladder = new ItemSheepBladder(itemSheepBladderID);
 	}
-	
-	private static void loadIDs() {
+
+	private static void loadIDs()
+	{
 		Configuration config;
-		try {
+		try
+		{
 			config = new Configuration(new File(TerraFirmaCraft.proxy.getMinecraftDir(), "/config/LWSOptions.cfg"));
 			config.load();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			System.out.println(new StringBuilder().append("[LWS] Error while trying to access settings configuration!").toString());
 			config = null;
 		}
@@ -56,15 +60,21 @@ public class LWSItems {
 		itemWaterSacLeatherID = getIntFor(config, "General", "WaterSacLeatherID", 5253);
 		itemSheepBladderID = getIntFor(config, "General", "SheepBladderID", 5254);
 
-		if (config != null) { config.save(); }
+		if (config != null)
+			config.save();
 	}
 	
-	private static int getIntFor(Configuration config, String heading, String item, int value) {
-		if (config == null) { return value; }
-		try {
+	private static int getIntFor(Configuration config, String heading, String item, int value)
+	{
+		if (config == null)
+			return value;
+		try
+		{
 			Property prop = config.get(heading, item, value);
 			return prop.getInt(value);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			System.out.println(new StringBuilder().append("[LWS] Error while trying to add Integer, config wasn't loaded properly!").toString());
 		}
 		return value;

@@ -26,19 +26,22 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="leatherwatersac", name="Leather Water Sac", version="2.1.b77", dependencies = "after:TerraFirmaCraft")
-@NetworkMod(clientSideRequired = true, serverSideRequired = true, versionBounds = "[2.1.b77]")
-public class LeatherWaterSac {
+@Mod(modid="leatherwatersac", name="Leather Water Sac", version="3.0.B78", dependencies = "after:TerraFirmaCraft")
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, versionBounds = "[3.0.B78]")
+public class LeatherWaterSac
+{
 	@Instance("LeatherWaterSac")
 	public static LeatherWaterSac instance;
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
+	public void preInit(FMLPreInitializationEvent event)
+	{
 		LWSItems.Setup();
 	}
 
 	@EventHandler
-	public void load(FMLInitializationEvent event) {
+	public void load(FMLInitializationEvent event)
+	{
 		LWSRecipes.registerRecipes();
 		GameRegistry.registerCraftingHandler(new CraftingHandler());
 		MinecraftForge.EVENT_BUS.register(new TFCAnimalDropEvent());

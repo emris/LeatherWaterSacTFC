@@ -24,17 +24,18 @@ import TFC.API.Crafting.CraftingManagerTFC;
 import TFC.Core.Recipes;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class LWSRecipes {
-
+public class LWSRecipes
+{
 	public static void registerRecipes()
 	{
 		ItemStack lwSac = new ItemStack(LWSItems.itemLeatherWaterSac, 1, LWSItems.itemLeatherWaterSac.getMaxDamage());
 		ItemStack leather = new ItemStack(LWSItems.itemWaterSacLeather, 1);
 		ItemStack bladder = new ItemStack(LWSItems.itemSheepBladder, 1);
 		ItemStack string_tfc = new ItemStack(TFCItems.WoolYarn, 1);
-		
 		Item[] tfcKnives = Recipes.Knives;
-		for(int j = 0; j < tfcKnives.length; j++) {
+
+		for(int j = 0; j < tfcKnives.length; j++)
+		{
 			// With String
 			GameRegistry.addRecipe(lwSac,new Object[]{" L ","#B#"," LK",
 				Character.valueOf('#'), string_tfc,
@@ -49,7 +50,12 @@ public class LWSRecipes {
 				Character.valueOf('K'), new ItemStack(tfcKnives[j], 1, 32767)
 			});
 		}
-		
-		CraftingManagerTFC.getInstance().addRecipe(new ItemStack(LWSItems.itemWaterSacLeather, 1), new Object[] { "   ##"," # ##","#####","#####"," ### ", Character.valueOf('#'), TFCItems.FlatLeather});
+		CraftingManagerTFC.getInstance().addRecipe(new ItemStack(LWSItems.itemWaterSacLeather, 1), new Object[] {
+			"   ##",
+			" # ##",
+			"#####",
+			"#####",
+			" ### ",
+			Character.valueOf('#'), TFCItems.FlatLeather});
 	}
 }
