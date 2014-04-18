@@ -27,7 +27,7 @@ import cpw.mods.fml.common.ICraftingHandler;
 public class CraftingHandler implements ICraftingHandler
 {
 	@Override
-	public void onCrafting(EntityPlayer player, ItemStack item,	IInventory craftMatrix)
+	public void onCrafting(EntityPlayer player, ItemStack item, IInventory craftMatrix)
 	{
 		if(craftMatrix != null)
 		{

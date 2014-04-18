@@ -35,13 +35,13 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import TFC.API.ISize;
 import TFC.API.Constant.TFCBlockID;
+import TFC.API.Enums.EnumItemReach;
 import TFC.API.Enums.EnumSize;
 import TFC.API.Enums.EnumWeight;
 import TFC.Core.TFCTabs;
 import TFC.Core.TFC_Core;
 import TFC.Core.Player.FoodStatsTFC;
 import TFC.Items.ItemTerra;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -59,7 +59,6 @@ public class ItemLeatherWaterSac extends Item implements ISize
 		this.setUnlocalizedName("LeatherWaterSac");
 		this.itemID = 256 + par1;
 		this.canStack();
-//		LanguageRegistry.addName(this, "Leather Water Sac");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -238,6 +237,12 @@ public class ItemLeatherWaterSac extends Item implements ISize
 	public boolean canStack()
 	{
 		return false;
+	}
+
+	@Override
+	public EnumItemReach getReach(ItemStack is)
+	{
+		return EnumItemReach.SHORT;
 	}
 
 }

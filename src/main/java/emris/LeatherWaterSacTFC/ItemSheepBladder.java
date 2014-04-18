@@ -24,11 +24,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import TFC.API.ISize;
+import TFC.API.Enums.EnumItemReach;
 import TFC.API.Enums.EnumSize;
 import TFC.API.Enums.EnumWeight;
 import TFC.Core.TFCTabs;
 import TFC.Items.ItemTerra;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -73,5 +73,11 @@ public class ItemSheepBladder extends Item implements ISize
 	public boolean canStack()
 	{
 		return true;
+	}
+
+	@Override
+	public EnumItemReach getReach(ItemStack is)
+	{
+		return EnumItemReach.SHORT;
 	}
 }
