@@ -15,19 +15,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package emris.LeatherWaterSacTFC;
+package emris.lwstfc;
 
 import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="leatherwatersac", name="Leather Water Sac", version="3.2.B78", dependencies = "after:TerraFirmaCraft")
-@NetworkMod(clientSideRequired = true, serverSideRequired = true, versionBounds = "[3.2.B78]")
+@Mod(modid="lwstfc", name="Leather Water Sac", version="3.3.B79", dependencies = "after:TerraFirmaCraft")
 public class LeatherWaterSac
 {
 	@Instance("LeatherWaterSac")
@@ -43,7 +41,7 @@ public class LeatherWaterSac
 	public void load(FMLInitializationEvent event)
 	{
 		LWSRecipes.registerRecipes();
-		GameRegistry.registerCraftingHandler(new CraftingHandler());
+		FMLCommonHandler.instance().bus().register(new CraftingHandler());
 		MinecraftForge.EVENT_BUS.register(new TFCAnimalDropEvent());
 	}
 }

@@ -15,17 +15,19 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package emris.LeatherWaterSacTFC;
+package emris.lwstfc;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import TFC.Entities.Mobs.EntitySheepTFC;
+
+import com.bioxx.tfc.Entities.Mobs.EntitySheepTFC;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class TFCAnimalDropEvent
 {
-	@ForgeSubscribe
+	@SubscribeEvent
 	public void onTFCAnimalDrop(LivingDropsEvent e)
 	{
 		if(e.entityLiving instanceof EntitySheepTFC)

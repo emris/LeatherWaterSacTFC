@@ -15,13 +15,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package emris.LeatherWaterSacTFC;
+package emris.lwstfc;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import TFC.TFCItems;
-import TFC.API.Crafting.CraftingManagerTFC;
-import TFC.Core.Recipes;
+
+import com.bioxx.tfc.TFCItems;
+import com.bioxx.tfc.Core.Recipes;
+import com.bioxx.tfc.api.Crafting.CraftingManagerTFC;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class LWSRecipes
@@ -32,22 +33,21 @@ public class LWSRecipes
 		ItemStack leather = new ItemStack(LWSItems.itemWaterSacLeather, 1);
 		ItemStack bladder = new ItemStack(LWSItems.itemSheepBladder, 1);
 		ItemStack string_tfc = new ItemStack(TFCItems.WoolYarn, 1);
-		Item[] tfcKnives = Recipes.Knives;
 
-		for(int j = 0; j < tfcKnives.length; j++)
+		for(int j = 0; j < Recipes.Knives.length; j++)
 		{
 			// With String
 			GameRegistry.addRecipe(lwSac,new Object[]{" L ","#B#"," LK",
 				Character.valueOf('#'), string_tfc,
 				Character.valueOf('L'), leather,
 				Character.valueOf('B'), bladder,
-				Character.valueOf('K'), new ItemStack(tfcKnives[j], 1, 32767)
+				Character.valueOf('K'), new ItemStack(Recipes.Knives[j], 1, 32767)
 			});
 			GameRegistry.addRecipe(lwSac,new Object[]{" # ","LBL"," #K",
 				Character.valueOf('#'), string_tfc,
 				Character.valueOf('L'), leather,
 				Character.valueOf('B'), bladder,
-				Character.valueOf('K'), new ItemStack(tfcKnives[j], 1, 32767)
+				Character.valueOf('K'), new ItemStack(Recipes.Knives[j], 1, 32767)
 			});
 		}
 		CraftingManagerTFC.getInstance().addRecipe(new ItemStack(LWSItems.itemWaterSacLeather, 1), new Object[] {

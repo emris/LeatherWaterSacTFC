@@ -15,40 +15,48 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package emris.LeatherWaterSacTFC;
+package emris.lwstfc;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import TFC.API.ISize;
-import TFC.API.Enums.EnumItemReach;
-import TFC.API.Enums.EnumSize;
-import TFC.API.Enums.EnumWeight;
-import TFC.Core.TFCTabs;
-import TFC.Items.ItemTerra;
+
+import com.bioxx.tfc.Core.TFCTabs;
+import com.bioxx.tfc.Items.ItemTerra;
+import com.bioxx.tfc.api.Enums.EnumItemReach;
+import com.bioxx.tfc.api.Enums.EnumSize;
+import com.bioxx.tfc.api.Enums.EnumWeight;
+import com.bioxx.tfc.api.Interfaces.ISize;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemSheepBladder extends Item implements ISize
 {
-	public ItemSheepBladder(int par1)
+	public ItemSheepBladder()
 	{
-		super(par1);
+		super();
 		this.maxStackSize = 16;
 		this.setCreativeTab(TFCTabs.TFCMaterials);
 		this.hasSubtypes = false;
 		this.setUnlocalizedName("SheepBladder");
-//		LanguageRegistry.addName(this, "Sheep Bladder");
+	}
+
+	@Override
+	public void getSubItems(Item item, CreativeTabs tabs, List list)
+	{
+		list.add(new ItemStack(this, 1));
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister registerer)
+	public void registerIcons(IIconRegister registerer)
 	{
-		this.itemIcon = registerer.registerIcon("leatherwatersac:SheepBladder");
+		this.itemIcon = registerer.registerIcon("lwstfc:SheepBladder");
 	}
 
 	@Override

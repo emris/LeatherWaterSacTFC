@@ -1,0 +1,17 @@
+#################
+## gradle
+#################
+
+.gradle/
+build/
+libs/
+
+#################
+## Eclipse
+#################
+
+.classpath
+.settings/
+.project
+.metadata
+bin/

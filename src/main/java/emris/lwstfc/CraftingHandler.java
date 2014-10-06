@@ -15,41 +15,46 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package emris.LeatherWaterSacTFC;
+package emris.lwstfc;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import TFC.Core.Recipes;
-import cpw.mods.fml.common.ICraftingHandler;
 
-public class CraftingHandler implements ICraftingHandler
+import com.bioxx.tfc.Core.Recipes;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+
+public class CraftingHandler
 {
-	@Override
-	public void onCrafting(EntityPlayer player, ItemStack item, IInventory craftMatrix)
+	@SubscribeEvent
+	public void onCrafting(ItemCraftedEvent e)
 	{
+		Item item = e.crafting.getItem();
+		IInventory craftMatrix = e.craftMatrix;
+
 		if(craftMatrix != null)
 		{
-			if(item.itemID == ItemLeatherWaterSac.itemID)
+			if(item == LWSItems.itemLeatherWaterSac)
 			{
-				if (player.capabilities.isCreativeMode)
-					item.setItemDamage(0);
+				if (e.player.capabilities.isCreativeMode)
+					e.crafting.setItemDamage(0);
 				
-				Item[] tfcKnives = Recipes.Knives;
 				for(int i = 0; i < craftMatrix.getSizeInventory(); i++)
 				{
 					if(craftMatrix.getStackInSlot(i) == null)
 						continue;
 
-					for(int j = 0; j < tfcKnives.length; j++)
+					for(int j = 0; j < Recipes.Knives.length; j++)
 					{
-						if(craftMatrix.getStackInSlot(i).itemID == tfcKnives[j].itemID)
+						if(craftMatrix.getStackInSlot(i).getItem() == Recipes.Knives[j])
 						{
 							ItemStack tfcKnife = craftMatrix.getStackInSlot(i).copy();
-							if(tfcKnife != null) {
-								tfcKnife.damageItem(1, player);
-								if(tfcKnife.getItemDamage() != 0 || player.capabilities.isCreativeMode)
+							if(tfcKnife != null)
+							{
+								tfcKnife.damageItem(1, e.player);
+								if(tfcKnife.getItemDamage() != 0 || e.player.capabilities.isCreativeMode)
 								{
 									craftMatrix.setInventorySlotContents(i, tfcKnife);
 									craftMatrix.getStackInSlot(i).stackSize = 2;
@@ -60,11 +65,6 @@ public class CraftingHandler implements ICraftingHandler
 				}
 			}
 		}
-	}
-
-	@Override
-	public void onSmelting(EntityPlayer player, ItemStack item)
-	{
 	}
 
 }

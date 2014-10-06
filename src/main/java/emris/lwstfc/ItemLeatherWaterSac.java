@@ -15,57 +15,63 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package emris.LeatherWaterSacTFC;
+package emris.lwstfc;
 
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet18Animation;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumMovingObjectType;
+import net.minecraft.network.play.server.S0BPacketAnimation;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import TFC.API.ISize;
-import TFC.API.Constant.TFCBlockID;
-import TFC.API.Enums.EnumItemReach;
-import TFC.API.Enums.EnumSize;
-import TFC.API.Enums.EnumWeight;
-import TFC.Core.TFCTabs;
-import TFC.Core.TFC_Core;
-import TFC.Core.Player.FoodStatsTFC;
-import TFC.Items.ItemTerra;
+
+import com.bioxx.tfc.TFCBlocks;
+import com.bioxx.tfc.Core.TFCTabs;
+import com.bioxx.tfc.Core.TFC_Core;
+import com.bioxx.tfc.Core.Player.FoodStatsTFC;
+import com.bioxx.tfc.Items.ItemTerra;
+import com.bioxx.tfc.api.Enums.EnumItemReach;
+import com.bioxx.tfc.api.Enums.EnumSize;
+import com.bioxx.tfc.api.Enums.EnumWeight;
+import com.bioxx.tfc.api.Interfaces.ISize;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemLeatherWaterSac extends Item implements ISize
 {
-	public static int itemID;
-
-	public ItemLeatherWaterSac(int par1)
+	public ItemLeatherWaterSac()
 	{
-		super(par1);
+		super();
 		this.maxStackSize = 1;
 		this.setCreativeTab(TFCTabs.TFCMisc);
 		this.setMaxDamage(12);
 		this.hasSubtypes = false;
 		this.setUnlocalizedName("LeatherWaterSac");
-		this.itemID = 256 + par1;
 		this.canStack();
+	}
+
+	@Override
+	public void getSubItems(Item item, CreativeTabs tabs, List list)
+	{
+		list.add(new ItemStack(this, 1));
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister registerer)
+	public void registerIcons(IIconRegister registerer)
 	{
-		this.itemIcon = registerer.registerIcon("leatherwatersac:LeatherWaterSac");
+		this.itemIcon = registerer.registerIcon("lwstfc:LeatherWaterSac");
 	}
 
 	@Override
@@ -80,7 +86,7 @@ public class ItemLeatherWaterSac extends Item implements ISize
 			if(sac.getItemDamage() == sac.getMaxDamage())
 			{
 				if(player instanceof EntityPlayerMP)
-					player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("sac.empty"));
+					player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("sac.empty")));
 			}
 			else
 			{
@@ -90,7 +96,7 @@ public class ItemLeatherWaterSac extends Item implements ISize
 		}
 		else
 		{
-			if(mop.typeOfHit == EnumMovingObjectType.TILE)
+			if(mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
 			{
 				int x = mop.blockX;
 				int y = mop.blockY;
@@ -102,14 +108,21 @@ public class ItemLeatherWaterSac extends Item implements ISize
 				if(!player.canPlayerEdit(x, y, z, mop.sideHit, sac))
 					return sac;
 
-				if(world.getBlockMaterial(x, y, z) == Material.water)
+				if(world.getBlock(x, y, z).getMaterial() == Material.water)
 				{
 					if(sac.getItemDamage() > 0)
 					{
 						if (!player.capabilities.isCreativeMode)
 						{
 							fillSac(world, sac, x, y, z);
-							world.spawnParticle("splash", x, y + 2, z, 0.0D, 0.0D, 0.0D);
+							world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 1, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
+							world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 2, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
+							world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 1, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
+							world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 2, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
+							world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 1, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
+							world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 2, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
+							world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 1, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
+							world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 2, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
 							world.playSoundAtEntity(player, "random.splash", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 						}
 					}
@@ -123,7 +136,7 @@ public class ItemLeatherWaterSac extends Item implements ISize
 					if(sac.getItemDamage() == sac.getMaxDamage())
 					{
 						if(player instanceof EntityPlayerMP)
-							player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("sac.empty"));
+							player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("sac.empty")));
 					}
 					else
 					{
@@ -137,9 +150,9 @@ public class ItemLeatherWaterSac extends Item implements ISize
 
 	private void fillSac(World world, ItemStack sac, int x, int y, int z)
 	{
-		int id = world.getBlockId(x, y, z);
-		if (id == TFCBlockID.FreshWaterStill || id == TFCBlockID.FreshWaterFlowing ||
-			id == TFCBlockID.HotWaterStill || id == TFCBlockID.HotWaterFlowing)
+		Block b = world.getBlock(x, y, z);
+		if (b == TFCBlocks.FreshWater || b == TFCBlocks.FreshWaterStationary ||
+			b == TFCBlocks.HotWater || b == TFCBlocks.HotWaterStationary)
 		{
 			sac.setItemDamage(sac.getItemDamage() - 6);
 			NBTTagCompound nbt = new NBTTagCompound();
@@ -147,7 +160,7 @@ public class ItemLeatherWaterSac extends Item implements ISize
 			sac.setTagCompound(nbt);
 		}
 
-		if (id == Block.waterStill.blockID || id == Block.waterMoving.blockID)
+		if (b == TFCBlocks.SaltWater || b == TFCBlocks.SaltWaterStationary)
 		{
 			sac.setItemDamage(sac.getItemDamage() - 6);
 			NBTTagCompound nbt = new NBTTagCompound();
@@ -197,7 +210,7 @@ public class ItemLeatherWaterSac extends Item implements ISize
 						else
 						{
 							world.playSoundAtEntity(p, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
-							p.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("drink.full"));
+							p.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("drink.full")));
 						}
 					}
 
@@ -206,8 +219,9 @@ public class ItemLeatherWaterSac extends Item implements ISize
 						fs.restoreWater(p, -rw);
 						if (!p.capabilities.isCreativeMode)
 							sac.setItemDamage(sac.getItemDamage() + 1);
-						p.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("drink.salt"));
-						p.getServerForPlayer().getEntityTracker().sendPacketToAllAssociatedPlayers(p, new Packet18Animation(p, 6));
+						p.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("drink.salt")));
+						//Do kind of spit animation
+						p.getServerForPlayer().getEntityTracker().func_151248_b(p, new S0BPacketAnimation(p, 4));
 					}
 				}
 			}
