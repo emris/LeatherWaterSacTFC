@@ -31,6 +31,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S0BPacketAnimation;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
@@ -42,6 +43,7 @@ import com.bioxx.tfc.TFCBlocks;
 import com.bioxx.tfc.Core.TFCFluid;
 import com.bioxx.tfc.Core.TFCTabs;
 import com.bioxx.tfc.Core.TFC_Core;
+import com.bioxx.tfc.Core.TFC_Time;
 import com.bioxx.tfc.Core.Player.FoodStatsTFC;
 import com.bioxx.tfc.Items.ItemTerra;
 import com.bioxx.tfc.api.Enums.EnumFoodGroup;
@@ -133,15 +135,14 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 					if(sac.getItemDamage() > 0)
 					{
 						fillSac(world, sac, x, y, z);
-						world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 1, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
-						world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 2, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
-						world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 1, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
-						world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 2, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
-						world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 1, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
-						world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 2, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
-						world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 1, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
-						world.spawnParticle("splash", x + (world.rand.nextDouble()-0.5), y + 2, z + (world.rand.nextDouble()-0.5), 0.0D, (world.rand.nextDouble()-0.5), 0.0D);
-						world.playSoundAtEntity(player, "random.splash", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+						double xHit = mop.hitVec.xCoord;
+						double yHit = mop.hitVec.yCoord;
+						double zHit = mop.hitVec.zCoord;
+						for(int l = 0; l < 5; l++)
+						{
+							world.spawnParticle("splash", xHit, yHit, zHit, (-0.5F + world.rand.nextFloat()), (-0.5F + world.rand.nextFloat()), (-0.5F + world.rand.nextFloat()));
+						}
+						world.playSoundAtEntity(player, "random.splash", 0.2F, world.rand.nextFloat() * 0.1F + 0.9F);
 					}
 					else
 					{
@@ -162,25 +163,6 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 				}
 			}
 			return sac;
-		}
-	}
-
-	private void fillSac(World world, ItemStack sac, int x, int y, int z)
-	{
-		Block b = world.getBlock(x, y, z);
-		int amount = 100;
-
-		if (b == TFCBlocks.FreshWater || b == TFCBlocks.FreshWaterStationary ||
-			b == TFCBlocks.HotWater || b == TFCBlocks.HotWaterStationary)
-		{
-			FluidStack fs = FluidRegistry.getFluidStack(TFCFluid.FRESHWATER.getName(), amount);
-			this.fill(sac, fs, true);
-		}
-
-		if (b == TFCBlocks.SaltWater || b == TFCBlocks.SaltWaterStationary)
-		{
-			FluidStack fs = FluidRegistry.getFluidStack(TFCFluid.SALTWATER.getName(), amount);
-			this.fill(sac, fs, true);
 		}
 	}
 
@@ -234,70 +216,60 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 						if (!p.capabilities.isCreativeMode)
 							this.drain(sac, 50, true);
 						p.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("drink.salt")));
-						//Do kind of spit animation
+						//Do some kind of spit particle animation
 						p.getServerForPlayer().getEntityTracker().func_151248_b(p, new S0BPacketAnimation(p, 4));
 					}
-					else if (sacFS.getFluid() == TFCFluid.BEER
-							|| sacFS.getFluid() == TFCFluid.CIDER
-							|| sacFS.getFluid() == TFCFluid.RUM
-							|| sacFS.getFluid() == TFCFluid.RYEWHISKEY
-							|| sacFS.getFluid() == TFCFluid.SAKE
-							|| sacFS.getFluid() == TFCFluid.VODKA
-							|| sacFS.getFluid() == TFCFluid.WHISKEY
-							|| sacFS.getFluid() == TFCFluid.CORNWHISKEY)
+					else if (isAlcohol(sacFS))
 					{
 						if (fs.needDrink())
 						{
 							fs.restoreWater(p, 800);
 							if (!p.capabilities.isCreativeMode)
 								this.drain(sac, 50, true);
-	
-							long soberTime = p.getEntityData().hasKey("soberTime") ? p.getEntityData().getLong("soberTime") : 0;
+
 							int time = world.rand.nextInt(1000) + 400;
-							soberTime += time;
-	
+							fs.consumeAlcohol();
+
 							if(world.rand.nextInt(100) == 0) p.addPotionEffect(new PotionEffect(8, time, 4));
 							if(world.rand.nextInt(100) == 0) p.addPotionEffect(new PotionEffect(5, time, 4));
 							if(world.rand.nextInt(100) == 0) p.addPotionEffect(new PotionEffect(8, time, 4));
 							if(world.rand.nextInt(200) == 0) p.addPotionEffect(new PotionEffect(10, time, 4));
 							if(world.rand.nextInt(150) == 0) p.addPotionEffect(new PotionEffect(12, time, 4));
 							if(world.rand.nextInt(180) == 0) p.addPotionEffect(new PotionEffect(13, time, 4));
-	
+
 							int levelMod = 250 * p.experienceLevel;
-							if(soberTime > 3000 + levelMod)
+							if(fs.soberTime > TFC_Time.getTotalTicks() + 3000 + levelMod)
 							{
 								if(world.rand.nextInt(4) == 0)
 								{
 									//player.addPotionEffect(new PotionEffect(9,time,4));
 								}
-	
-								if(soberTime > 5000 + levelMod)
+
+								if(fs.soberTime > TFC_Time.getTotalTicks() + 5000 + levelMod)
 								{
 									if(world.rand.nextInt(4) == 0)
 										p.addPotionEffect(new PotionEffect(18, time, 4));
-	
-									if(soberTime > 7000 + levelMod)
+
+									if(fs.soberTime > TFC_Time.getTotalTicks() + 7000 + levelMod)
 									{
 										if(world.rand.nextInt(2) == 0)
 											p.addPotionEffect(new PotionEffect(15, time, 4));
-	
-										if(soberTime > 8000 + levelMod)
+
+										if(fs.soberTime > TFC_Time.getTotalTicks() + 8000 + levelMod)
 										{
 											if(world.rand.nextInt(10) == 0)
 												p.addPotionEffect(new PotionEffect(20, time, 4));
 										}
-	
-										if(soberTime > 10000 + levelMod && !p.capabilities.isCreativeMode)
+
+										if(fs.soberTime > TFC_Time.getTotalTicks() + 10000 + levelMod && !p.capabilities.isCreativeMode)
 										{
-											soberTime = 0;
-											//((EntityPlayerMP)player).mcServer.getConfigurationManager().sendChatMsg(player.username+" died of alcohol poisoning.");
-											p.inventory.dropAllItems();
-											p.setHealth(0);
+											fs.soberTime = 0;
+											player.attackEntityFrom((new DamageSource("alcohol")).setDamageBypassesArmor().setDamageIsAbsolute(), player.getMaxHealth());
 										}
 									}
 								}
 							}
-							p.getEntityData().setLong("soberTime",soberTime);
+							TFC_Core.setPlayerFoodStats(player, fs);
 						}
 						else
 						{
@@ -325,7 +297,10 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 		ItemTerra.addSizeInformation(is, arraylist);
 		FluidStack fs = this.getFluid(is);
 		if(fs != null)
-			arraylist.add(EnumChatFormatting.DARK_GRAY + fs.getLocalizedName() + ":" + fs.amount + ":" + is.getItemDamage());
+		{
+			arraylist.add(EnumChatFormatting.DARK_AQUA + fs.getLocalizedName());
+			//arraylist.add(EnumChatFormatting.DARK_GRAY + "" + fs.amount + ":" + is.getItemDamage());
+		}
 	}
 
 	@Override
@@ -352,11 +327,63 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 		return EnumItemReach.SHORT;
 	}
 
+	////////////////////////////////////////////////////
+	/*
+	 * Private Methods
+	 */
+	////////////////////////////////////////////////////
+	private void fillSac(World world, ItemStack sac, int x, int y, int z)
+	{
+		Block b = world.getBlock(x, y, z);
+		int amount = 200;
+
+		if (b == TFCBlocks.FreshWater || b == TFCBlocks.FreshWaterStationary ||
+				b == TFCBlocks.HotWater || b == TFCBlocks.HotWaterStationary)
+		{
+			FluidStack fs = FluidRegistry.getFluidStack(TFCFluid.FRESHWATER.getName(), amount);
+			this.fill(sac, fs, true);
+		}
+
+		if (b == TFCBlocks.SaltWater || b == TFCBlocks.SaltWaterStationary)
+		{
+			FluidStack fs = FluidRegistry.getFluidStack(TFCFluid.SALTWATER.getName(), amount);
+			this.fill(sac, fs, true);
+		}
+	}
+
+	private boolean isValidFluid(FluidStack fs)
+	{
+		return fs.getFluid() == TFCFluid.BEER
+				|| fs.getFluid() == TFCFluid.CIDER
+				|| fs.getFluid() == TFCFluid.CORNWHISKEY
+				|| fs.getFluid() == TFCFluid.FRESHWATER
+				|| fs.getFluid() == TFCFluid.HOTWATER
+				|| fs.getFluid() == TFCFluid.MILK
+				|| fs.getFluid() == TFCFluid.RUM
+				|| fs.getFluid() == TFCFluid.RYEWHISKEY
+				|| fs.getFluid() == TFCFluid.SAKE
+				|| fs.getFluid() == TFCFluid.SALTWATER
+				|| fs.getFluid() == TFCFluid.VODKA
+				|| fs.getFluid() == TFCFluid.WHISKEY;
+	}
+
+	private boolean isAlcohol(FluidStack fs)
+	{
+		return fs.getFluid() == TFCFluid.BEER
+				|| fs.getFluid() == TFCFluid.CIDER
+				|| fs.getFluid() == TFCFluid.CORNWHISKEY
+				|| fs.getFluid() == TFCFluid.RUM
+				|| fs.getFluid() == TFCFluid.RYEWHISKEY
+				|| fs.getFluid() == TFCFluid.SAKE
+				|| fs.getFluid() == TFCFluid.VODKA
+				|| fs.getFluid() == TFCFluid.WHISKEY;
+	}
 
 	////////////////////////////////////////////////////
 	/*
 	 * Fluid stuff
 	 */
+	////////////////////////////////////////////////////
 	@Override
 	public FluidStack getFluid(ItemStack container)
 	{
@@ -465,21 +492,5 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 			container.setItemDamage(capacity - (currentAmount - stack.amount));
 		}
 		return stack;
-	}
-
-	private boolean isValidFluid(FluidStack fs)
-	{
-		return fs.getFluid() == TFCFluid.BEER
-				|| fs.getFluid() == TFCFluid.CIDER
-				|| fs.getFluid() == TFCFluid.CORNWHISKEY
-				|| fs.getFluid() == TFCFluid.FRESHWATER
-				|| fs.getFluid() == TFCFluid.HOTWATER
-				|| fs.getFluid() == TFCFluid.MILK
-				|| fs.getFluid() == TFCFluid.RUM
-				|| fs.getFluid() == TFCFluid.RYEWHISKEY
-				|| fs.getFluid() == TFCFluid.SAKE
-				|| fs.getFluid() == TFCFluid.SALTWATER
-				|| fs.getFluid() == TFCFluid.VODKA
-				|| fs.getFluid() == TFCFluid.WHISKEY;
 	}
 }

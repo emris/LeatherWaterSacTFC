@@ -1,7 +1,8 @@
-item.LeatherWaterSac.name=Læder-vandsæk
-item.WaterSacLeather.name=Vandsækslæder
-item.SheepBladder.name=Fåreblære
-		
+#da_DK
+item.LeatherWaterSac.name=LÃ¦der-vandsÃ¦k
+item.WaterSacLeather.name=VandsÃ¦kslÃ¦der
+item.SheepBladder.name=FÃ¥reblÃ¦re
+
 drink.full=Jeg er fuld!!
 drink.salt=Bvadr, det smager salt!
 sac.empty=Tom!

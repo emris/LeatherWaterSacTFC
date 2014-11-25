@@ -1,0 +1,8 @@
+#sv_SE
+item.LeatherWaterSac.name=Vattenskinn
+item.WaterSacLeather.name=Vattenskinnsläder
+item.SheepBladder.name=Fårblåsa
+
+drink.full=Kan inte dricka mer!
+drink.salt=Usch, alldeles för salt!
+sac.empty=Vattensäcken är tom!

@@ -1,8 +1,8 @@
-#zh_HK
+#zh_TW
 item.LeatherWaterSac.name=皮革水袋
 item.WaterSacLeather.name=水袋皮革
-item.SheepBladder.name=羊膀胱
+item.SheepBladder.name=羊的膀胱
 
-drink.full=好飽 !
-drink.salt=噢, 好鹹， Urgh!
+drink.full=飽了!
+drink.salt=咳咳，好鹹!!嘔~
 sac.empty=空的!
