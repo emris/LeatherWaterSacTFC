@@ -1,12 +1,21 @@
-[
 {
-  "modid": "leatherwatersac",
-  "name": "Leather Water Sac",
-  "version": "",
-  "updateUrl": "",
-  "authors": [
-    "Emris_Morath"
-  ],
-  "description": "It's a water sac made out of lather for TerraFirmaCraft"
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "lwstfc",
+    "name": "Leather Water Sac",
+    "description": "It's a water sac made out of leather for TerraFirmaCraft",
+    "version": "${mod_version}",
+    "mcversion": "${minecraft_version}",
+    "url" : "",
+    "updateUrl": "",
+    "authorList": ["Emris_Morath"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [  ],
+    "parent": "",
+    "requiredMods": ["terrafirmacraft"],
+    "dependencies": ["after:TerraFirmaCraft"],
+    "dependants": [  ],
+    "useDependencyInformation": "true"
+  }]
 }
-]

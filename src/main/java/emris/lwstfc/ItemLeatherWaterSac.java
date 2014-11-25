@@ -19,7 +19,6 @@ package emris.lwstfc;
 
 import java.util.List;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -57,12 +56,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerItem
 {
 	private int capacity;
+	private int drinkAmount;
 
 	public ItemLeatherWaterSac()
 	{
 		super();
 		this.maxStackSize = 1;
 		this.capacity = 600;
+		this.drinkAmount = 50;
 		this.setCreativeTab(TFCTabs.TFCMisc);
 		this.setMaxDamage(capacity);
 		this.hasSubtypes = false;
@@ -87,19 +88,19 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 	@Override
 	public ItemStack onItemRightClick(ItemStack sac, World world, EntityPlayer player)
 	{
+		// Do not use in creative game mode
+		if(player.capabilities.isCreativeMode)
+			return sac;
+
+		// Fix item damage if sac is empty and damage is not maxDamage for some reason
+		if(this.getFluid(sac) == null && sac.getItemDamage() != sac.getMaxDamage())
+			sac.setItemDamage(sac.getMaxDamage());
+
+		// Right click + Sneak will empty the sac
 		if(player.isSneaking())
 		{
 			this.drain(sac, capacity, true);
 			return sac;
-		}
-
-		if (player.capabilities.isCreativeMode)
-		{
-			FluidStack fs = this.getFluid(sac);
-			if(fs == null)
-				sac.setItemDamage(sac.getMaxDamage());
-			else
-				this.fill(sac, new FluidStack(fs, capacity), true);
 		}
 
 		MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(world, player, true);
@@ -130,11 +131,12 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 				if(!player.canPlayerEdit(x, y, z, mop.sideHit, sac))
 					return sac;
 
-				if(world.getBlock(x, y, z).getMaterial() == Material.water)
+				if(isWater(world.getBlock(x, y, z)))
 				{
 					if(sac.getItemDamage() > 0)
 					{
-						fillSac(world, sac, x, y, z);
+						fillSac(world, sac, x, y, z, 200);
+
 						double xHit = mop.hitVec.xCoord;
 						double yHit = mop.hitVec.yCoord;
 						double zHit = mop.hitVec.zCoord;
@@ -181,109 +183,99 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 	@Override
 	public ItemStack onEaten(ItemStack sac, World world, EntityPlayer player)
 	{
-		if(!world.isRemote)
+		if(!world.isRemote && !player.capabilities.isCreativeMode && player instanceof EntityPlayerMP)
 		{
-			if(sac.getItemDamage() != sac.getMaxDamage() || player.capabilities.isCreativeMode)
+			FluidStack sacFS = this.getFluid(sac);
+			if(sacFS != null)
 			{
-				if(player instanceof EntityPlayerMP)
+				EntityPlayerMP p = (EntityPlayerMP)player;
+				FoodStatsTFC fs = TFC_Core.getPlayerFoodStats(p);
+				float nwl = fs.getMaxWater(p);
+				int rw = (int)nwl / 6;
+
+				if (sacFS.getFluid() == TFCFluid.FRESHWATER)
 				{
-					EntityPlayerMP p = (EntityPlayerMP)player;
-					FoodStatsTFC fs = TFC_Core.getPlayerFoodStats(p);
-					float nwl = fs.getMaxWater(p);
-					int rw = (int)nwl / 6;
-
-					FluidStack sacFS = this.getFluid(sac);
-					if(sacFS == null)
-						return sac;
-
-					if (sacFS.getFluid() == TFCFluid.FRESHWATER)
+					if (fs.needDrink())
 					{
-						if (fs.needDrink())
-						{
-							fs.restoreWater(p, rw);
-							if (!p.capabilities.isCreativeMode)
-								this.drain(sac, 50, true);
-						}
-						else
-						{
-							world.playSoundAtEntity(p, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
-							p.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("drink.full")));
-						}
+						fs.restoreWater(p, rw);
+						this.drain(sac, drinkAmount, true);
 					}
-					else if (sacFS.getFluid() == TFCFluid.SALTWATER && fs.needDrink())
+				}
+				else if (sacFS.getFluid() == TFCFluid.SALTWATER && fs.needDrink())
+				{
+					fs.restoreWater(p, -rw);
+					this.drain(sac, drinkAmount, true);
+					p.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("drink.salt")));
+					//Do some kind of spit particle animation
+					p.getServerForPlayer().getEntityTracker().func_151248_b(p, new S0BPacketAnimation(p, 4));
+				}
+				else if (isAlcohol(sacFS))
+				{
+					if (fs.needDrink())
 					{
-						fs.restoreWater(p, -rw);
-						if (!p.capabilities.isCreativeMode)
-							this.drain(sac, 50, true);
-						p.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("drink.salt")));
-						//Do some kind of spit particle animation
-						p.getServerForPlayer().getEntityTracker().func_151248_b(p, new S0BPacketAnimation(p, 4));
-					}
-					else if (isAlcohol(sacFS))
-					{
-						if (fs.needDrink())
+						fs.restoreWater(p, 800);
+						this.drain(sac, drinkAmount, true);
+
+						int time = world.rand.nextInt(1000) + 400;
+						fs.consumeAlcohol();
+
+						if(world.rand.nextInt(100) == 0) p.addPotionEffect(new PotionEffect(8, time, 4));
+						if(world.rand.nextInt(100) == 0) p.addPotionEffect(new PotionEffect(5, time, 4));
+						if(world.rand.nextInt(100) == 0) p.addPotionEffect(new PotionEffect(8, time, 4));
+						if(world.rand.nextInt(200) == 0) p.addPotionEffect(new PotionEffect(10, time, 4));
+						if(world.rand.nextInt(150) == 0) p.addPotionEffect(new PotionEffect(12, time, 4));
+						if(world.rand.nextInt(180) == 0) p.addPotionEffect(new PotionEffect(13, time, 4));
+
+						int levelMod = 250 * p.experienceLevel;
+						if(fs.soberTime > TFC_Time.getTotalTicks() + 3000 + levelMod)
 						{
-							fs.restoreWater(p, 800);
-							if (!p.capabilities.isCreativeMode)
-								this.drain(sac, 50, true);
+							if(world.rand.nextInt(4) == 0)
+							{
+								//player.addPotionEffect(new PotionEffect(9,time,4));
+							}
 
-							int time = world.rand.nextInt(1000) + 400;
-							fs.consumeAlcohol();
-
-							if(world.rand.nextInt(100) == 0) p.addPotionEffect(new PotionEffect(8, time, 4));
-							if(world.rand.nextInt(100) == 0) p.addPotionEffect(new PotionEffect(5, time, 4));
-							if(world.rand.nextInt(100) == 0) p.addPotionEffect(new PotionEffect(8, time, 4));
-							if(world.rand.nextInt(200) == 0) p.addPotionEffect(new PotionEffect(10, time, 4));
-							if(world.rand.nextInt(150) == 0) p.addPotionEffect(new PotionEffect(12, time, 4));
-							if(world.rand.nextInt(180) == 0) p.addPotionEffect(new PotionEffect(13, time, 4));
-
-							int levelMod = 250 * p.experienceLevel;
-							if(fs.soberTime > TFC_Time.getTotalTicks() + 3000 + levelMod)
+							if(fs.soberTime > TFC_Time.getTotalTicks() + 5000 + levelMod)
 							{
 								if(world.rand.nextInt(4) == 0)
-								{
-									//player.addPotionEffect(new PotionEffect(9,time,4));
-								}
+									p.addPotionEffect(new PotionEffect(18, time, 4));
 
-								if(fs.soberTime > TFC_Time.getTotalTicks() + 5000 + levelMod)
+								if(fs.soberTime > TFC_Time.getTotalTicks() + 7000 + levelMod)
 								{
-									if(world.rand.nextInt(4) == 0)
-										p.addPotionEffect(new PotionEffect(18, time, 4));
+									if(world.rand.nextInt(2) == 0)
+										p.addPotionEffect(new PotionEffect(15, time, 4));
 
-									if(fs.soberTime > TFC_Time.getTotalTicks() + 7000 + levelMod)
+									if(fs.soberTime > TFC_Time.getTotalTicks() + 8000 + levelMod)
 									{
-										if(world.rand.nextInt(2) == 0)
-											p.addPotionEffect(new PotionEffect(15, time, 4));
+										if(world.rand.nextInt(10) == 0)
+											p.addPotionEffect(new PotionEffect(20, time, 4));
+									}
 
-										if(fs.soberTime > TFC_Time.getTotalTicks() + 8000 + levelMod)
-										{
-											if(world.rand.nextInt(10) == 0)
-												p.addPotionEffect(new PotionEffect(20, time, 4));
-										}
-
-										if(fs.soberTime > TFC_Time.getTotalTicks() + 10000 + levelMod && !p.capabilities.isCreativeMode)
-										{
-											fs.soberTime = 0;
-											player.attackEntityFrom((new DamageSource("alcohol")).setDamageBypassesArmor().setDamageIsAbsolute(), player.getMaxHealth());
-										}
+									if(fs.soberTime > TFC_Time.getTotalTicks() + 10000 + levelMod)
+									{
+										fs.soberTime = 0;
+										player.attackEntityFrom((new DamageSource("alcohol")).setDamageBypassesArmor().setDamageIsAbsolute(), player.getMaxHealth());
 									}
 								}
 							}
-							TFC_Core.setPlayerFoodStats(player, fs);
 						}
-						else
-						{
-							world.playSoundAtEntity(p, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
-							p.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("drink.full")));
-						}
+						TFC_Core.setPlayerFoodStats(player, fs);
 					}
-					else if(sacFS.getFluid() == TFCFluid.MILK && fs.needFood())
+				}
+				else if(sacFS.getFluid() == TFCFluid.MILK && fs.needFood())
+				{
+					if (fs.needDrink())
 					{
 						fs.restoreWater(p, rw);
-						if (!p.capabilities.isCreativeMode)
-							this.drain(sac, 50, true);
+						this.drain(sac, drinkAmount, true);
 						fs.addNutrition(EnumFoodGroup.Dairy, 20);
+						TFC_Core.setPlayerFoodStats(player, fs);
 					}
+				}
+
+				if(!fs.needDrink())
+				{
+					world.playSoundAtEntity(p, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+					p.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("drink.full")));
 				}
 			}
 		}
@@ -332,19 +324,16 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 	 * Private Methods
 	 */
 	////////////////////////////////////////////////////
-	private void fillSac(World world, ItemStack sac, int x, int y, int z)
+	private void fillSac(World world, ItemStack sac, int x, int y, int z, int amount)
 	{
 		Block b = world.getBlock(x, y, z);
-		int amount = 200;
-
-		if (b == TFCBlocks.FreshWater || b == TFCBlocks.FreshWaterStationary ||
-				b == TFCBlocks.HotWater || b == TFCBlocks.HotWaterStationary)
+		if (isFreshWater(b) || isHotWater(b))
 		{
 			FluidStack fs = FluidRegistry.getFluidStack(TFCFluid.FRESHWATER.getName(), amount);
 			this.fill(sac, fs, true);
 		}
 
-		if (b == TFCBlocks.SaltWater || b == TFCBlocks.SaltWaterStationary)
+		if (isSaltWater(b))
 		{
 			FluidStack fs = FluidRegistry.getFluidStack(TFCFluid.SALTWATER.getName(), amount);
 			this.fill(sac, fs, true);
@@ -377,6 +366,26 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 				|| fs.getFluid() == TFCFluid.SAKE
 				|| fs.getFluid() == TFCFluid.VODKA
 				|| fs.getFluid() == TFCFluid.WHISKEY;
+	}
+
+	private boolean isFreshWater(Block block)
+	{
+		return block == TFCBlocks.FreshWater || block == TFCBlocks.FreshWaterStationary;
+	}
+
+	private boolean isHotWater(Block block)
+	{
+		return block == TFCBlocks.HotWater || block == TFCBlocks.HotWaterStationary;
+	}
+
+	private boolean isSaltWater(Block block)
+	{
+		return block == TFCBlocks.SaltWater || block == TFCBlocks.SaltWaterStationary;
+	}
+
+	private boolean isWater(Block block)
+	{
+		return isFreshWater(block) || isHotWater(block) || isSaltWater(block);
 	}
 
 	////////////////////////////////////////////////////
