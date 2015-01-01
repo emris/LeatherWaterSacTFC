@@ -55,7 +55,10 @@ task sourceJar(type: Jar) {
     appendix = 'src'
 }
 
-tasks.build.dependsOn('sourceJar', 'deobfJar')
+artifacts {
+    archives sourceJar
+    archives deobfJar
+}
 
 dependencies {
     // Copy "[1.7.10]TerraFirmaCraft-deobf-0.79.13.jar" file
