@@ -19,8 +19,8 @@ package emris.lwstfc;
 
 import net.minecraft.item.ItemStack;
 
-import com.bioxx.tfc.TFCItems;
 import com.bioxx.tfc.Core.Recipes;
+import com.bioxx.tfc.api.TFCItems;
 import com.bioxx.tfc.api.Crafting.CraftingManagerTFC;
 
 import cpw.mods.fml.common.registry.GameRegistry;

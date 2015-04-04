@@ -18,6 +18,7 @@
 package emris.lwstfc;
 
 import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -38,18 +39,20 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import com.bioxx.tfc.TFCBlocks;
-import com.bioxx.tfc.Core.TFCFluid;
+
 import com.bioxx.tfc.Core.TFCTabs;
 import com.bioxx.tfc.Core.TFC_Core;
 import com.bioxx.tfc.Core.TFC_Time;
 import com.bioxx.tfc.Core.Player.FoodStatsTFC;
 import com.bioxx.tfc.Items.ItemTerra;
+import com.bioxx.tfc.api.TFCBlocks;
+import com.bioxx.tfc.api.TFCFluids;
 import com.bioxx.tfc.api.Enums.EnumFoodGroup;
 import com.bioxx.tfc.api.Enums.EnumItemReach;
 import com.bioxx.tfc.api.Enums.EnumSize;
 import com.bioxx.tfc.api.Enums.EnumWeight;
 import com.bioxx.tfc.api.Interfaces.ISize;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -193,7 +196,7 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 				float nwl = fs.getMaxWater(p);
 				int rw = (int)nwl / 6;
 
-				if (sacFS.getFluid() == TFCFluid.FRESHWATER)
+				if (sacFS.getFluid() == TFCFluids.FRESHWATER)
 				{
 					if (fs.needDrink())
 					{
@@ -201,7 +204,7 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 						this.drain(sac, drinkAmount, true);
 					}
 				}
-				else if (sacFS.getFluid() == TFCFluid.SALTWATER && fs.needDrink())
+				else if (sacFS.getFluid() == TFCFluids.SALTWATER && fs.needDrink())
 				{
 					fs.restoreWater(p, -rw);
 					this.drain(sac, drinkAmount, true);
@@ -261,7 +264,7 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 						TFC_Core.setPlayerFoodStats(player, fs);
 					}
 				}
-				else if(sacFS.getFluid() == TFCFluid.MILK && fs.needFood())
+				else if(sacFS.getFluid() == TFCFluids.MILK && fs.needFood())
 				{
 					if (fs.needDrink())
 					{
@@ -329,43 +332,43 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 		Block b = world.getBlock(x, y, z);
 		if (isFreshWater(b) || isHotWater(b))
 		{
-			FluidStack fs = FluidRegistry.getFluidStack(TFCFluid.FRESHWATER.getName(), amount);
+			FluidStack fs = FluidRegistry.getFluidStack(TFCFluids.FRESHWATER.getName(), amount);
 			this.fill(sac, fs, true);
 		}
 
 		if (isSaltWater(b))
 		{
-			FluidStack fs = FluidRegistry.getFluidStack(TFCFluid.SALTWATER.getName(), amount);
+			FluidStack fs = FluidRegistry.getFluidStack(TFCFluids.SALTWATER.getName(), amount);
 			this.fill(sac, fs, true);
 		}
 	}
 
 	private boolean isValidFluid(FluidStack fs)
 	{
-		return fs.getFluid() == TFCFluid.BEER
-				|| fs.getFluid() == TFCFluid.CIDER
-				|| fs.getFluid() == TFCFluid.CORNWHISKEY
-				|| fs.getFluid() == TFCFluid.FRESHWATER
-				|| fs.getFluid() == TFCFluid.HOTWATER
-				|| fs.getFluid() == TFCFluid.MILK
-				|| fs.getFluid() == TFCFluid.RUM
-				|| fs.getFluid() == TFCFluid.RYEWHISKEY
-				|| fs.getFluid() == TFCFluid.SAKE
-				|| fs.getFluid() == TFCFluid.SALTWATER
-				|| fs.getFluid() == TFCFluid.VODKA
-				|| fs.getFluid() == TFCFluid.WHISKEY;
+		return fs.getFluid() == TFCFluids.BEER
+				|| fs.getFluid() == TFCFluids.CIDER
+				|| fs.getFluid() == TFCFluids.CORNWHISKEY
+				|| fs.getFluid() == TFCFluids.FRESHWATER
+				|| fs.getFluid() == TFCFluids.HOTWATER
+				|| fs.getFluid() == TFCFluids.MILK
+				|| fs.getFluid() == TFCFluids.RUM
+				|| fs.getFluid() == TFCFluids.RYEWHISKEY
+				|| fs.getFluid() == TFCFluids.SAKE
+				|| fs.getFluid() == TFCFluids.SALTWATER
+				|| fs.getFluid() == TFCFluids.VODKA
+				|| fs.getFluid() == TFCFluids.WHISKEY;
 	}
 
 	private boolean isAlcohol(FluidStack fs)
 	{
-		return fs.getFluid() == TFCFluid.BEER
-				|| fs.getFluid() == TFCFluid.CIDER
-				|| fs.getFluid() == TFCFluid.CORNWHISKEY
-				|| fs.getFluid() == TFCFluid.RUM
-				|| fs.getFluid() == TFCFluid.RYEWHISKEY
-				|| fs.getFluid() == TFCFluid.SAKE
-				|| fs.getFluid() == TFCFluid.VODKA
-				|| fs.getFluid() == TFCFluid.WHISKEY;
+		return fs.getFluid() == TFCFluids.BEER
+				|| fs.getFluid() == TFCFluids.CIDER
+				|| fs.getFluid() == TFCFluids.CORNWHISKEY
+				|| fs.getFluid() == TFCFluids.RUM
+				|| fs.getFluid() == TFCFluids.RYEWHISKEY
+				|| fs.getFluid() == TFCFluids.SAKE
+				|| fs.getFluid() == TFCFluids.VODKA
+				|| fs.getFluid() == TFCFluids.WHISKEY;
 	}
 
 	private boolean isFreshWater(Block block)
