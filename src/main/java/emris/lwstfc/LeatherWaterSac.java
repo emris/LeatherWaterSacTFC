@@ -25,7 +25,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid="lwstfc", name="Leather Water Sac", version="3.5.B79", dependencies = "after:TerraFirmaCraft")
+@Mod(modid="lwstfc", name="Leather Water Sac", version="3.6.B79", dependencies = "after:TerraFirmaCraft")
 public class LeatherWaterSac
 {
 	@Instance("LeatherWaterSac")

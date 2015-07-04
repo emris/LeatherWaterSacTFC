@@ -61,7 +61,7 @@ artifacts {
 }
 
 dependencies {
-    // Copy "[1.7.10]TerraFirmaCraft-deobf-0.79.13.jar" file
+    // Copy "[1.7.10]TerraFirmaCraft-deobf-0.79.**.jar" file
 	// into the ./libs directory
 }
 

@@ -124,24 +124,23 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 		{
 			if(mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
 			{
-				int x = mop.blockX;
-				int y = mop.blockY;
-				int z = mop.blockZ;
+				WPos wp = findWater(world, mop.blockX, mop.blockY, mop.blockZ, mop.sideHit);
 
-				if(!world.canMineBlock(player, x, y, z))
+				if(!world.canMineBlock(player, wp.getX(), wp.getY(), wp.getZ()))
 					return sac;
 
-				if(!player.canPlayerEdit(x, y, z, mop.sideHit, sac))
+				if(!player.canPlayerEdit(wp.getX(), wp.getY(), wp.getZ(), mop.sideHit, sac))
 					return sac;
 
-				if(isWater(world.getBlock(x, y, z)))
+				if(wp.isWater())
 				{
 					if(sac.getItemDamage() > 0)
 					{
-						fillSac(world, sac, x, y, z, 200);
+						fillSac(world, sac, wp.getX(), wp.getY(), wp.getZ(), 200);
 
 						double xHit = mop.hitVec.xCoord;
 						double yHit = mop.hitVec.yCoord;
+						if(world.getBlockMetadata(wp.getX(), wp.getY(), wp.getZ()) > 0 && mop.sideHit == 1) yHit += 1;
 						double zHit = mop.hitVec.zCoord;
 						for(int l = 0; l < 5; l++)
 						{
@@ -386,9 +385,49 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 		return block == TFCBlocks.SaltWater || block == TFCBlocks.SaltWaterStationary;
 	}
 
-	private boolean isWater(Block block)
+	private WPos findWater(World world, int x, int y, int z, int side)
 	{
-		return isFreshWater(block) || isHotWater(block) || isSaltWater(block);
+		WPos wp = new WPos();
+		wp.setX(x);
+		wp.setY(y);
+		wp.setZ(z);
+		wp.setWater(false);
+
+		Block block = world.getBlock(wp.getX(), wp.getY(), wp.getZ());
+		if(isFreshWater(block) || isHotWater(block) || isSaltWater(block))
+		{
+			wp.setWater(true);
+			return wp;
+		}
+		else
+		{
+			switch (side)
+			{
+				case 1:
+					wp.setY(wp.getY() + 1);
+					break;
+				case 2:
+					wp.setZ(wp.getZ() - 1);
+					break;
+				case 3:
+					wp.setZ(wp.getZ() + 1);
+					break;
+				case 4:
+					wp.setX(wp.getX() - 1);
+					break;
+				case 5:
+					wp.setX(wp.getX() + 1);
+					break;
+			}
+			block = world.getBlock(wp.getX(), wp.getY(), wp.getZ());
+			if(isFreshWater(block) || isHotWater(block) || isSaltWater(block))
+			{
+				wp.setWater(true);
+				return wp;
+			}
+		}
+
+		return wp;
 	}
 
 	////////////////////////////////////////////////////
