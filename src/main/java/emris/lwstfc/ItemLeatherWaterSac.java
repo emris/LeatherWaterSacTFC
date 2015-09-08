@@ -67,7 +67,7 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 		this.maxStackSize = 1;
 		this.capacity = 600;
 		this.drinkAmount = 50;
-		this.setCreativeTab(TFCTabs.TFCMisc);
+		this.setCreativeTab(TFCTabs.TFC_MISC);
 		this.setMaxDamage(capacity);
 		this.hasSubtypes = false;
 		this.setUnlocalizedName("LeatherWaterSac");
@@ -372,17 +372,17 @@ public class ItemLeatherWaterSac extends Item implements ISize, IFluidContainerI
 
 	private boolean isFreshWater(Block block)
 	{
-		return block == TFCBlocks.FreshWater || block == TFCBlocks.FreshWaterStationary;
+		return block == TFCBlocks.freshWater || block == TFCBlocks.freshWaterStationary;
 	}
 
 	private boolean isHotWater(Block block)
 	{
-		return block == TFCBlocks.HotWater || block == TFCBlocks.HotWaterStationary;
+		return block == TFCBlocks.hotWater || block == TFCBlocks.hotWaterStationary;
 	}
 
 	private boolean isSaltWater(Block block)
 	{
-		return block == TFCBlocks.SaltWater || block == TFCBlocks.SaltWaterStationary;
+		return block == TFCBlocks.saltWater || block == TFCBlocks.saltWaterStationary;
 	}
 
 	private WPos findWater(World world, int x, int y, int z, int side)

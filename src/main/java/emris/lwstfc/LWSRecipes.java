@@ -32,22 +32,22 @@ public class LWSRecipes
 		ItemStack lwSac = new ItemStack(LWSItems.itemLeatherWaterSac, 1, LWSItems.itemLeatherWaterSac.getMaxDamage());
 		ItemStack leather = new ItemStack(LWSItems.itemWaterSacLeather, 1);
 		ItemStack bladder = new ItemStack(LWSItems.itemSheepBladder, 1);
-		ItemStack string_tfc = new ItemStack(TFCItems.WoolYarn, 1);
+		ItemStack string_tfc = new ItemStack(TFCItems.woolYarn, 1);
 
-		for(int j = 0; j < Recipes.Knives.length; j++)
+		for(int j = 0; j < Recipes.knives.length; j++)
 		{
 			// With String
 			GameRegistry.addRecipe(lwSac,new Object[]{" L ","#B#"," LK",
 				Character.valueOf('#'), string_tfc,
 				Character.valueOf('L'), leather,
 				Character.valueOf('B'), bladder,
-				Character.valueOf('K'), new ItemStack(Recipes.Knives[j], 1, 32767)
+				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, 32767)
 			});
 			GameRegistry.addRecipe(lwSac,new Object[]{" # ","LBL"," #K",
 				Character.valueOf('#'), string_tfc,
 				Character.valueOf('L'), leather,
 				Character.valueOf('B'), bladder,
-				Character.valueOf('K'), new ItemStack(Recipes.Knives[j], 1, 32767)
+				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, 32767)
 			});
 		}
 		CraftingManagerTFC.getInstance().addRecipe(new ItemStack(LWSItems.itemWaterSacLeather, 1), new Object[] {
@@ -56,6 +56,6 @@ public class LWSRecipes
 			"#####",
 			"#####",
 			" ### ",
-			Character.valueOf('#'), TFCItems.FlatLeather});
+			Character.valueOf('#'), TFCItems.flatLeather});
 	}
 }

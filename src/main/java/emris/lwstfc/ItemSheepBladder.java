@@ -41,7 +41,7 @@ public class ItemSheepBladder extends Item implements ISize
 	{
 		super();
 		this.maxStackSize = 16;
-		this.setCreativeTab(TFCTabs.TFCMaterials);
+		this.setCreativeTab(TFCTabs.TFC_MATERIALS);
 		this.hasSubtypes = false;
 		this.setUnlocalizedName("SheepBladder");
 	}

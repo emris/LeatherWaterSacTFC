@@ -46,9 +46,9 @@ public class CraftingHandler
 					if(craftMatrix.getStackInSlot(i) == null)
 						continue;
 
-					for(int j = 0; j < Recipes.Knives.length; j++)
+					for(int j = 0; j < Recipes.knives.length; j++)
 					{
-						if(craftMatrix.getStackInSlot(i).getItem() == Recipes.Knives[j])
+						if(craftMatrix.getStackInSlot(i).getItem() == Recipes.knives[j])
 						{
 							ItemStack tfcKnife = craftMatrix.getStackInSlot(i).copy();
 							if(tfcKnife != null)
