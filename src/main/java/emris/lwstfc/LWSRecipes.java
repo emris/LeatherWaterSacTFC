@@ -18,6 +18,7 @@
 package emris.lwstfc;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import com.bioxx.tfc.Core.Recipes;
 import com.bioxx.tfc.api.TFCItems;
@@ -41,13 +42,13 @@ public class LWSRecipes
 				Character.valueOf('#'), string_tfc,
 				Character.valueOf('L'), leather,
 				Character.valueOf('B'), bladder,
-				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, 32767)
+				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, OreDictionary.WILDCARD_VALUE)
 			});
 			GameRegistry.addRecipe(lwSac,new Object[]{" # ","LBL"," #K",
 				Character.valueOf('#'), string_tfc,
 				Character.valueOf('L'), leather,
 				Character.valueOf('B'), bladder,
-				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, 32767)
+				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, OreDictionary.WILDCARD_VALUE)
 			});
 		}
 		CraftingManagerTFC.getInstance().addRecipe(new ItemStack(LWSItems.itemWaterSacLeather, 1), new Object[] {
@@ -56,6 +57,6 @@ public class LWSRecipes
 			"#####",
 			"#####",
 			" ### ",
-			Character.valueOf('#'), TFCItems.flatLeather});
+			'#', TFCItems.flatLeather });
 	}
 }
