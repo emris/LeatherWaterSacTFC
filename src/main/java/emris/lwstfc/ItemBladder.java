@@ -24,6 +24,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 
 import com.bioxx.tfc.Core.TFCTabs;
 import com.bioxx.tfc.Items.ItemTerra;
@@ -35,29 +36,40 @@ import com.bioxx.tfc.api.Interfaces.ISize;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemSheepBladder extends Item implements ISize
+public class ItemBladder extends Item implements ISize
 {
-	public ItemSheepBladder()
+	public static final String[] metaNames = new String[] {"Sheep", "Cow", "Deer"};
+
+	public ItemBladder()
 	{
 		super();
 		this.maxStackSize = 16;
 		this.setCreativeTab(TFCTabs.TFC_MATERIALS);
-		this.hasSubtypes = false;
-		this.setUnlocalizedName("SheepBladder");
+		this.hasSubtypes = true;
+		this.setUnlocalizedName("Bladder");
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void getSubItems(Item item, CreativeTabs tabs, List list)
 	{
-		list.add(new ItemStack(this, 1));
+		list.add(new ItemStack(this, 1, 0));
+		list.add(new ItemStack(this, 1, 1));
+		list.add(new ItemStack(this, 1, 2));
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack is)
+	{
+		int i = MathHelper.clamp_int(is.getItemDamage(), 0, 15);
+		return super.getUnlocalizedName() + "." + metaNames[i];
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IIconRegister registerer)
 	{
-		this.itemIcon = registerer.registerIcon("lwstfc:SheepBladder");
+		this.itemIcon = registerer.registerIcon("lwstfc:Bladder");
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

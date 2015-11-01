@@ -1,7 +1,9 @@
 #ru_RU
 item.LeatherWaterSac.name=Кожаный бурдюк
 item.WaterSacLeather.name=Кожа на бурдюк
-item.SheepBladder.name=Овечий мочевой пузырь
+item.Bladder.Sheep.name=Овечий мочевой пузырь
+item.Bladder.Cow.name=Cow Bladder
+item.Bladder.Deer.name=Deer Bladder
 
 drink.full=Я напился.
 drink.salt=Тьфу, соленая!

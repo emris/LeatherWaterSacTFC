@@ -21,6 +21,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 
+import com.bioxx.tfc.Entities.Mobs.EntityCowTFC;
+import com.bioxx.tfc.Entities.Mobs.EntityDeer;
 import com.bioxx.tfc.Entities.Mobs.EntitySheepTFC;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -31,7 +33,11 @@ public class TFCAnimalDropEvent
 	public void onTFCAnimalDrop(LivingDropsEvent e)
 	{
 		if(e.entityLiving instanceof EntitySheepTFC)
-			addDrops(e, new ItemStack(LWSItems.itemSheepBladder, 1));
+			addDrops(e, new ItemStack(LWSItems.itemBladder, 1, 0));
+		else if(e.entityLiving instanceof EntityCowTFC)
+			addDrops(e, new ItemStack(LWSItems.itemBladder, 1, 1));
+		else if(e.entityLiving instanceof EntityDeer)
+			addDrops(e, new ItemStack(LWSItems.itemBladder, 1, 2));
 	}
 	
 	void addDrops (LivingDropsEvent event, ItemStack dropStack)

@@ -1,7 +1,9 @@
 #fr_CA
 item.LeatherWaterSac.name=Gourde en cuir
 item.WaterSacLeather.name=Cuir pour gourde
-item.SheepBladder.name=Vessie de mouton
+item.Bladder.Sheep.name=Vessie de mouton
+item.Bladder.Cow.name=Cow Bladder
+item.Bladder.Deer.name=Deer Bladder
 
 drink.full=Je suis plein!
 drink.salt=Yark, c'est trop salé.

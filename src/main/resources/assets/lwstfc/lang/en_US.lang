@@ -1,7 +1,9 @@
 #en_US
 item.LeatherWaterSac.name=Leather Water Sac
 item.WaterSacLeather.name=Water Sac Leather
-item.SheepBladder.name=Sheep Bladder
+item.Bladder.Sheep.name=Sheep Bladder
+item.Bladder.Cow.name=Cow Bladder
+item.Bladder.Deer.name=Deer Bladder
 
 drink.full=I'm full!
 drink.salt=Ugh, so salty. Barf!

@@ -32,7 +32,9 @@ public class LWSRecipes
 	{
 		ItemStack lwSac = new ItemStack(LWSItems.itemLeatherWaterSac, 1, LWSItems.itemLeatherWaterSac.getMaxDamage());
 		ItemStack leather = new ItemStack(LWSItems.itemWaterSacLeather, 1);
-		ItemStack bladder = new ItemStack(LWSItems.itemSheepBladder, 1);
+		ItemStack bladderSheep = new ItemStack(LWSItems.itemBladder, 1, 0);
+		ItemStack bladderCow = new ItemStack(LWSItems.itemBladder, 1, 1);
+		ItemStack bladderDeer = new ItemStack(LWSItems.itemBladder, 1, 2);
 		ItemStack string_tfc = new ItemStack(TFCItems.woolYarn, 1);
 
 		for(int j = 0; j < Recipes.knives.length; j++)
@@ -41,13 +43,39 @@ public class LWSRecipes
 			GameRegistry.addRecipe(lwSac,new Object[]{" L ","#B#"," LK",
 				Character.valueOf('#'), string_tfc,
 				Character.valueOf('L'), leather,
-				Character.valueOf('B'), bladder,
+				Character.valueOf('B'), bladderSheep,
 				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, OreDictionary.WILDCARD_VALUE)
 			});
 			GameRegistry.addRecipe(lwSac,new Object[]{" # ","LBL"," #K",
 				Character.valueOf('#'), string_tfc,
 				Character.valueOf('L'), leather,
-				Character.valueOf('B'), bladder,
+				Character.valueOf('B'), bladderSheep,
+				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, OreDictionary.WILDCARD_VALUE)
+			});
+
+			GameRegistry.addRecipe(lwSac,new Object[]{" L ","#B#"," LK",
+				Character.valueOf('#'), string_tfc,
+				Character.valueOf('L'), leather,
+				Character.valueOf('B'), bladderCow,
+				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, OreDictionary.WILDCARD_VALUE)
+			});
+			GameRegistry.addRecipe(lwSac,new Object[]{" # ","LBL"," #K",
+				Character.valueOf('#'), string_tfc,
+				Character.valueOf('L'), leather,
+				Character.valueOf('B'), bladderCow,
+				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, OreDictionary.WILDCARD_VALUE)
+			});
+
+			GameRegistry.addRecipe(lwSac,new Object[]{" L ","#B#"," LK",
+				Character.valueOf('#'), string_tfc,
+				Character.valueOf('L'), leather,
+				Character.valueOf('B'), bladderDeer,
+				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, OreDictionary.WILDCARD_VALUE)
+			});
+			GameRegistry.addRecipe(lwSac,new Object[]{" # ","LBL"," #K",
+				Character.valueOf('#'), string_tfc,
+				Character.valueOf('L'), leather,
+				Character.valueOf('B'), bladderDeer,
 				Character.valueOf('K'), new ItemStack(Recipes.knives[j], 1, OreDictionary.WILDCARD_VALUE)
 			});
 		}

@@ -24,16 +24,16 @@ public class LWSItems
 {
 	public static Item itemLeatherWaterSac;
 	public static Item itemWaterSacLeather;
-	public static Item itemSheepBladder;
+	public static Item itemBladder;
 
 	public static void Setup()
 	{
 		itemLeatherWaterSac = new ItemLeatherWaterSac();
 		itemWaterSacLeather = new ItemWaterSacLeather();
-		itemSheepBladder = new ItemSheepBladder();
+		itemBladder = new ItemBladder();
 
 		GameRegistry.registerItem(itemLeatherWaterSac, itemLeatherWaterSac.getUnlocalizedName());
 		GameRegistry.registerItem(itemWaterSacLeather, itemWaterSacLeather.getUnlocalizedName());
-		GameRegistry.registerItem(itemSheepBladder, itemSheepBladder.getUnlocalizedName());
+		GameRegistry.registerItem(itemBladder, itemBladder.getUnlocalizedName());
 	}
 }

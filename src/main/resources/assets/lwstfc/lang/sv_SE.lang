@@ -1,7 +1,9 @@
 #sv_SE
 item.LeatherWaterSac.name=Vattenskinn
 item.WaterSacLeather.name=Vattenskinnsläder
-item.SheepBladder.name=Fårblåsa
+item.Bladder.Sheep.name=Fårblåsa
+item.Bladder.Cow.name=Cow Bladder
+item.Bladder.Deer.name=Deer Bladder
 
 drink.full=Kan inte dricka mer!
 drink.salt=Usch, alldeles för salt!

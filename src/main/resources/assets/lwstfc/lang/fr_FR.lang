@@ -1,4 +1,6 @@
 #fr_FR
 item.LeatherWaterSac.name=Gourde en cuir
 item.WaterSacLeather.name=Cuid pour gourde
-item.SheepBladder.name=Vessie de mouton
+item.Bladder.Sheep.name=Vessie de mouton
+item.Bladder.Cow.name=Cow Bladder
+item.Bladder.Deer.name=Deer Bladder
